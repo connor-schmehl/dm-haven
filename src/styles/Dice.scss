@@ -1,0 +1,38 @@
+.dice-rolling-output {
+    color: white;
+}
+
+.dice-rolling-number-tracker {
+    border-radius: 90px;
+    position: absolute;
+    float: right;
+}
+
+.dice-rolling-container {
+    max-width: 180px;
+    flex-wrap: wrap;
+}
+
+.dice-rolling-manual-input {
+    max-width: 133px;
+    background-color: black;
+    color: white;
+}
+
+.dice-rolling-button {
+    padding: 1px;
+    margin: 2px;
+}
+
+.dice-rolling-buttons {
+    display: flex;
+}
+
+.dice-rolling-buttons-tracker {
+    display: flex;
+    justify-content: space-around;
+}
+
+.dice-rolling-tracker {
+    color: white;
+}

@@ -1,0 +1,31 @@
+.initiative-container {
+    border: 1px solid white;
+    max-width: 180px;    
+}
+
+.initiative-input {
+    border: 1px solid white;
+    color: white;
+    background-color: black;
+}
+
+.initiative-add-button {
+    color: white;
+    border: 1px solid white;
+    background-color: black;
+}
+
+.initiative-entry {
+    color: white;
+    background-color: black;
+    list-style-type: none;
+    &.initiative-entry-active {
+        color: lightblue;
+    }
+}
+
+.initiative-button {
+    color: white;
+    background-color: black;
+    border: 1px solid white;
+}
