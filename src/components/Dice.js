@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import '../styles/Dice.scss';
 import { evaluate, randomInt } from 'mathjs';
 
@@ -9,38 +9,26 @@ const numberMap = {
     default: 'th',
 }
 
-class Dice extends Component {
-    constructor(props) {
-        super(props);
+function Dice() {
+    const [state, setState] = useState({output: []});
 
-        this.state = {
-            outputRolls: [],
-        }
-
-        this.parseDice = this.parseDice.bind(this);
-        this.rollManually = this.rollManually.bind(this);
-        this.onInputChange = this.onInputChange.bind(this);
-        this.getTrackerClassname = this.getTrackerClassname.bind(this);
-        this.rollSelected = this.rollSelected.bind(this);
-        
-    }
-    onInputChange(event) {
-        this.setState({[event.target.name]: event.target.value});
+    const onInputChange = function(event) {
+        setState({...state, [event.target.name]: event.target.value});
     }
 
-    addDice(dice) {
+    const addDice = function(dice) {
         debugger;
-        if (this.state[dice]) {
-            if (this.state[dice] >= 99) {
+        if (state[dice]) {
+            if (state[dice] >= 99) {
                 return;
             }
-            this.setState({[dice]: this.state[dice] + 1});
+            setState({...state, [dice]: state[dice] + 1});
             return;
         }
-        this.setState({[dice]: 1});
+        setState({...state, [dice]: 1});
     }
 
-    parseDice(diceString) {
+    const parseDice = function(diceString) {
         const re = /[0-9]*d[0-9]*/g
         const specialRe = /[^0-9,\sd]/g
         const isComputed = [...diceString.matchAll(specialRe)].length !== 0;
@@ -69,84 +57,82 @@ class Dice extends Component {
         
     }
 
-    rollManually() {
-        const output = this.parseDice(this.state.manualDice);
+    const rollManually = function() {
+        const output = parseDice(state.manualDice);
         const lines = [];
         for (let i = 0; i < output.length; i++) {
             lines.push(<div key={i}>{output[i][0] + '    ' + output[i][1]}</div>)
         }
-        this.setState({output: lines});
+        setState({...state, output: lines});
     }
 
-    getTrackerClassname(dice) {
+    const getTrackerClassname = function(dice) {
         const className = ['dice-rolling-number-tracker'];
-        if (!this.state['d20']) {
+        if (!state['d20']) {
             className.push('hidden');
         }
         return className;
     }
 
-    rollSelected() {
-        const diceString = (this.state['d20'] || '') + 'd20,'
-            + (this.state['d12'] || '') + 'd12,'
-            + (this.state['d10'] || '') + 'd10,'
-            + (this.state['d8'] || '') + 'd8,'
-            + (this.state['d6'] || '') + 'd6,'
-            + (this.state['d4'] || '') + 'd4';
-        const output = this.parseDice(diceString);
+    const rollSelected = function() {
+        const diceString = (state['d20'] || '') + 'd20,'
+            + (state['d12'] || '') + 'd12,'
+            + (state['d10'] || '') + 'd10,'
+            + (state['d8'] || '') + 'd8,'
+            + (state['d6'] || '') + 'd6,'
+            + (state['d4'] || '') + 'd4';
+        const output = parseDice(diceString);
         const lines = [];
         for (let i = 0; i < output.length; i++) {
             lines.push(<div key={i}>{output[i][0] + '    ' + output[i][1]}</div>)
         }
-        this.setState({output: lines});
+        setState({...state, output: lines});
     }
 
-    render() {
-        return (
-            <div className="dice-rolling-container">
-                <input name="manualDice" id="manualDice" className="dice-rolling-manual-input" placeholder="Manually Roll Dice" onChange={this.onInputChange}/>
-                <button className="button-black" onClick={this.rollManually}>Roll</button>
-                <div className="dice-rolling-buttons">
-                    <div className="dice-rolling-button-container">
-                        <button className="button-black dice-rolling-button" onClick={() => this.addDice('d20')}>D20</button>
-                        <div className={this.getTrackerClassname('d20')}>{this.state['d20']}</div>
-                    </div>
-                    <div className="dice-rolling-button-container">
-                        <button className="button-black dice-rolling-button" onClick={() => this.addDice('d12')}>D12</button>
-                        <div className={this.getTrackerClassname('d12')}>{this.state['d12']}</div>
-                    </div>
-                    <div className="dice-rolling-button-container">
-                        <button className="button-black dice-rolling-button" onClick={() => this.addDice('d10')}>D10</button>
-                        <div className={this.getTrackerClassname('d10')}>{this.state['d10']}</div>
-                    </div>
-                    <div className="dice-rolling-button-container">
-                        <button className="button-black dice-rolling-button" onClick={() => this.addDice('d8')}>D8</button>
-                        <div className={this.getTrackerClassname('d8')}>{this.state['d8']}</div>
-                    </div>
-                    <div className="dice-rolling-button-container">
-                        <button className="button-black dice-rolling-button" onClick={() => this.addDice('d6')}>D6</button>
-                        <div className={this.getTrackerClassname('d6')}>{this.state['d6']}</div>
-                    </div>
-                    <div className="dice-rolling-button-container">
-                        <button className="button-black dice-rolling-button" onClick={() => this.addDice('d4')}>D4</button>
-                        <div className={this.getTrackerClassname('d4')}>{this.state['d4']}</div>
-                    </div>
+    return (
+        <div className="dice-rolling-container">
+            <input name="manualDice" id="manualDice" className="dice-rolling-manual-input" placeholder="Manually Roll Dice" onChange={onInputChange}/>
+            <button className="button-black" onClick={rollManually}>Roll</button>
+            <div className="dice-rolling-buttons">
+                <div className="dice-rolling-button-container">
+                    <button className="button-black dice-rolling-button" onClick={() => addDice('d20')}>D20</button>
+                    <div className={getTrackerClassname('d20')}>{state['d20']}</div>
                 </div>
-                <div className="dice-rolling-buttons-tracker">
-                    <div className="dice-rolling-tracker">{this.state['d20']}</div>
-                    <div className="dice-rolling-tracker">{this.state['d12']}</div>
-                    <div className="dice-rolling-tracker">{this.state['d10']}</div>
-                    <div className="dice-rolling-tracker">{this.state['d8']}</div>
-                    <div className="dice-rolling-tracker">{this.state['d6']}</div>
-                    <div className="dice-rolling-tracker">{this.state['d4']}</div>
+                <div className="dice-rolling-button-container">
+                    <button className="button-black dice-rolling-button" onClick={() => addDice('d12')}>D12</button>
+                    <div className={getTrackerClassname('d12')}>{state['d12']}</div>
                 </div>
-                <button className="button-black" onClick={this.rollSelected}>Roll Selected Dice</button>
-                <div className="dice-rolling-output">
-                    {this.state.output}
+                <div className="dice-rolling-button-container">
+                    <button className="button-black dice-rolling-button" onClick={() => addDice('d10')}>D10</button>
+                    <div className={getTrackerClassname('d10')}>{state['d10']}</div>
+                </div>
+                <div className="dice-rolling-button-container">
+                    <button className="button-black dice-rolling-button" onClick={() => addDice('d8')}>D8</button>
+                    <div className={getTrackerClassname('d8')}>{state['d8']}</div>
+                </div>
+                <div className="dice-rolling-button-container">
+                    <button className="button-black dice-rolling-button" onClick={() => addDice('d6')}>D6</button>
+                    <div className={getTrackerClassname('d6')}>{state['d6']}</div>
+                </div>
+                <div className="dice-rolling-button-container">
+                    <button className="button-black dice-rolling-button" onClick={() => addDice('d4')}>D4</button>
+                    <div className={getTrackerClassname('d4')}>{state['d4']}</div>
                 </div>
             </div>
-        );
-    }
+            <div className="dice-rolling-buttons-tracker">
+                <div className="dice-rolling-tracker">{state['d20']}</div>
+                <div className="dice-rolling-tracker">{state['d12']}</div>
+                <div className="dice-rolling-tracker">{state['d10']}</div>
+                <div className="dice-rolling-tracker">{state['d8']}</div>
+                <div className="dice-rolling-tracker">{state['d6']}</div>
+                <div className="dice-rolling-tracker">{state['d4']}</div>
+            </div>
+            <button className="button-black" onClick={rollSelected}>Roll Selected Dice</button>
+            <div className="dice-rolling-output">
+                {state.output}
+            </div>
+        </div>
+    );
 }
 
 export default Dice;

@@ -1,0 +1,24 @@
+swagger: "2.0"
+info:
+  description: "Backend API for DM Haven"
+  title: "DM Haven API"
+  version: "1.0.0"
+host: "api.dm-haven.appspot.com"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+schemes:
+- "https"
+paths:
+  "/login":
+    post:
+      description: "logs the user in"
+      operationId: "login"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "logged in"
+        403:
+          description: "access denied"
